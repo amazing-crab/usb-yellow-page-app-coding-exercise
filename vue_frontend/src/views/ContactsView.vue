@@ -4,6 +4,6 @@ import ContactsTable from '../components/ContactsTable.vue'
 
 <template>
   <main>
-    <ContactsTable :contactsData="contactsData"/>
+    <ContactsTable :contactsData="contactsData" />
   </main>
 </template>
