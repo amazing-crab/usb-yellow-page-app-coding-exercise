@@ -6,4 +6,5 @@ from .views import *
 router = routers.DefaultRouter()
 router.register('contacts', ContactsViewSet)
 
-urlpatterns = router.urls
+urlpatterns = [path('contactsform/', ContactsFormView.as_view())]
+urlpatterns += router.urls
