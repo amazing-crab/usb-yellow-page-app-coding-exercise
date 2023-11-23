@@ -60,8 +60,10 @@
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
-      <v-icon icon="mdi-pencil" @click="editItem(item)"></v-icon>
-      <v-icon icon="mdi-delete" @click="deleteItem(item)"></v-icon>
+      <div class="d-flex">
+        <v-icon icon="mdi-pencil" @click="editItem(item)"></v-icon>
+        <v-icon icon="mdi-delete" @click="deleteItem(item)"></v-icon>
+      </div>
     </template>
   </v-data-table>
 </template>
