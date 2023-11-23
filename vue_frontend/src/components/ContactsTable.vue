@@ -175,13 +175,24 @@ export default defineComponent({
       })
     },
 
-    save(): void {
-      if (this.editedIndex > -1) {
-        Object.assign(this.contactsData[this.editedIndex], this.editItem)
-      } else {
-        this.contactsData.push({ ...this.editedItem })
+    async save() {
+      try {
+        const response = await fetch('http://localhost:8000/api/contactsform/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.editedItem)
+        })
+
+        if (response.ok) {
+          this.close()
+        } else {
+          console.error('Error:', response)
+        }
+      } catch (error) {
+        console.error('Error:', error)
       }
-      this.close()
     }
   }
 })
