@@ -5,7 +5,7 @@ import ContactsForm from '../components/ContactsForm.vue'
 
 <template>
   <main>
-    <ContactsTable :contactsData="contactsData" />
+    <ContactsTable/>
     <ContactsForm/>
   </main>
 </template>
