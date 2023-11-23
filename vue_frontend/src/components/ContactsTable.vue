@@ -148,27 +148,8 @@ export default defineComponent({
 
   methods: {
     async editItem(item: any) {
-      this.editedIndex = this.contactsData.findIndex((contact: any) => contact === item)
+      this.editedIndex = this.contactsData.findIndex((contact: any) => contact.id === item.id)
       this.editedItem = Object.assign({}, item)
-
-      try {
-        const response = await fetch(`http://localhost:8000/api/contactsform/${item.id}/`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(item)
-        })
-
-        if (response.ok) {
-          this.close()
-        } else {
-          console.error('Error:', response)
-        }
-      } catch (error) {
-        console.error('Error:', error)
-      }
-
       this.dialog = true
     },
 
@@ -219,18 +200,38 @@ export default defineComponent({
 
     async save() {
       try {
-        const response = await fetch(`http://localhost:8000/api/contactsform/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(this.editedItem)
-        })
-
-        if (response.ok) {
-          this.close()
+        if (Number.isNaN(this.editedItem.id)) {
+          const response = await fetch(`http://localhost:8000/api/contactsform/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.editedItem)
+          })
+          if (response.ok) {
+            this.close()
+          } else {
+            console.error('Error:', response)
+          }
         } else {
-          console.error('Error:', response)
+          const contactId = this.editedItem.id
+          const response = await fetch(`http://localhost:8000/api/contactsform/${contactId}/`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.editedItem)
+          })
+
+          if (response.ok) {
+            this.close()
+            const index = this.contactsData.findIndex((contact) => contact.id === contactId)
+            if (index !== -1) {
+              this.contactsData[index] = this.editedItem
+            }
+          } else {
+            console.error('Error:', response)
+          }
         }
       } catch (error) {
         console.error('Error:', error)
