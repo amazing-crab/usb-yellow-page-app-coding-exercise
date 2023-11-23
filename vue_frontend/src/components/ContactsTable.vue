@@ -75,7 +75,13 @@ export default defineComponent({
   name: 'ContactsData',
   data() {
     return {
-      contactsData: [],
+      contactsData: [] as {
+        first_name: string
+        last_name: string
+        phone_number: string
+        address: string
+        comments: string
+      }[],
       dialog: false,
       dialogDelete: false,
       headers: [
@@ -93,6 +99,12 @@ export default defineComponent({
         phone_number: '',
         address: '',
         comments: ''
+      } as {
+        first_name: string
+        last_name: string
+        phone_number: string
+        address: string
+        comments: string
       },
       defaultItem: {
         first_name: '',
@@ -100,6 +112,12 @@ export default defineComponent({
         phone_number: '',
         address: '',
         comments: ''
+      } as {
+        first_name: string
+        last_name: string
+        phone_number: string
+        address: string
+        comments: string
       }
     }
   },
@@ -159,7 +177,7 @@ export default defineComponent({
 
     save(): void {
       if (this.editedIndex > -1) {
-        this.$set(this.contactsData, this.editedIndex, { ...this.editItem })
+        Object.assign(this.contactsData[this.editedIndex], this.editItem)
       } else {
         this.contactsData.push({ ...this.editedItem })
       }
