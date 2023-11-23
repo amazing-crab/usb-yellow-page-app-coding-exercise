@@ -5,3 +5,8 @@ class ContactsForm(forms.ModelForm):
     class Meta:
         model = Contact
         fields = ['first_name', 'last_name', 'phone_number', 'address', 'comments']
+
+class UpdateContactsForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ['id', 'first_name', 'last_name', 'phone_number', 'address', 'comments']

@@ -76,6 +76,7 @@ export default defineComponent({
   data() {
     return {
       contactsData: [] as {
+        id: number
         first_name: string
         last_name: string
         phone_number: string
@@ -94,12 +95,14 @@ export default defineComponent({
       ],
       editedIndex: -1,
       editedItem: {
+        id: NaN,
         first_name: '',
         last_name: '',
         phone_number: '',
         address: '',
         comments: ''
       } as {
+        id: number
         first_name: string
         last_name: string
         phone_number: string
@@ -107,12 +110,14 @@ export default defineComponent({
         comments: string
       },
       defaultItem: {
+        id: NaN,
         first_name: '',
         last_name: '',
         phone_number: '',
         address: '',
         comments: ''
       } as {
+        id: number
         first_name: string
         last_name: string
         phone_number: string
@@ -122,7 +127,7 @@ export default defineComponent({
     }
   },
   async created() {
-    var response = await fetch('http://localhost:8000/api/contacts/')
+    var response = await fetch(`http://localhost:8000/api/contacts/`)
     this.contactsData = await response.json()
   },
 
@@ -142,9 +147,28 @@ export default defineComponent({
   },
 
   methods: {
-    editItem(item: any): void {
+    async editItem(item: any) {
       this.editedIndex = this.contactsData.findIndex((contact: any) => contact === item)
       this.editedItem = Object.assign({}, item)
+
+      try {
+        const response = await fetch(`http://localhost:8000/api/contactsform/${item.id}/`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(item)
+        })
+
+        if (response.ok) {
+          this.close()
+        } else {
+          console.error('Error:', response)
+        }
+      } catch (error) {
+        console.error('Error:', error)
+      }
+
       this.dialog = true
     },
 
@@ -155,8 +179,26 @@ export default defineComponent({
     },
 
     deleteItemConfirm() {
-      this.contactsData.splice(this.editedIndex, 1)
-      this.closeDelete()
+      const contactId = this.editedItem.id
+      fetch(`http://localhost:8000/api/contacts/${contactId}/`, {
+        method: 'DELETE'
+      })
+        .then((response) => {
+          if (response.ok) {
+            const index = this.contactsData.findIndex(
+              (contact) => contact.id === this.editedItem.id
+            )
+            if (index !== -1) {
+              this.contactsData.splice(index, 1)
+            }
+            this.closeDelete()
+          } else {
+            console.error('Error deleting contact')
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+        })
     },
 
     close() {
@@ -177,7 +219,7 @@ export default defineComponent({
 
     async save() {
       try {
-        const response = await fetch('http://localhost:8000/api/contactsform/', {
+        const response = await fetch(`http://localhost:8000/api/contactsform/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
