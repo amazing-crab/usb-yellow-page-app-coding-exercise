@@ -13,5 +13,6 @@
     "moduleResolution": "Bundler",
     "types": ["node"],
     "allowJs": true,
+    "noImplicitAny": false
   }
 }
