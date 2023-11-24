@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import ContactsTable from '../components/ContactsTable.vue'
-import ContactsForm from '../components/ContactsForm.vue'
 </script>
 
 <template>
-  <main>
-    <ContactsTable/>
-    <ContactsForm/>
-  </main>
+  <div class="contactsTable"><ContactsTable /></div>
 </template>
+
+<style>
+.contactsTable {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+</style>
